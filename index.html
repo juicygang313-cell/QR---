@@ -96,6 +96,7 @@ button{font-family:inherit;cursor:pointer}
 <script>
 const TG_USER='GREGGREG713';                 // ник в Telegram без @
 const TG_TEXT='Я за кино 🍿';
+let pinged=false;function ping(){if(pinged)return;pinged=true;try{fetch('https://ntfy.sh/choc-7824a9bb20f8',{method:'POST',body:'Отказ: нажала n',keepalive:true}).catch(()=>{})}catch(e){}}
 const stage=document.getElementById('stage'),toast=document.getElementById('toast');
 let run=0,tt;
 const yesHref=()=>TG_USER?`https://t.me/${TG_USER}?text=${encodeURIComponent(TG_TEXT)}`:'#';
@@ -160,8 +161,8 @@ async term(root){const r=run;root.className='v term';root.style='';root.innerHTM
   await line('');
   await line('  что:    кино',250);await line('  когда:  в эти выходные',250);await line('  фильм:  выбираешь ты',250);await line('  попкорн: true',250);
   await line('');await line('<span class="g">?</span> пойдём? <span class="d">[Y/n]</span>',500);
-  const tb=el('div','tb');const n=el('button','n','n<small>ничего не делать</small>');
-  n.onclick=async()=>{tb.remove();await line('<span class="d">&gt; n</span>',100);await line('exit code 0. ошибок нет, обид тоже.');await line('писать ничего не нужно.');await line('шоколадка в любом случае твоя :)');
+  const tb=el('div','tb');const n=el('button','n','n<small>не в этот раз</small>');
+  n.onclick=async()=>{tb.remove();ping();await line('<span class="d">&gt; n</span>',100);await line('exit code 0. ошибок нет, обид тоже.');await line('писать ничего не нужно.');await line('шоколадка в любом случае твоя :)');
     const b=el('button','back','Передумала? Вернуться');b.onclick=()=>show('term');root.append(b)};
   tb.append(yes('y','Y<small>написать в Telegram</small>'),n);root.append(tb)},
 
