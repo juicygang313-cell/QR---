@@ -161,10 +161,10 @@ async term(root){const r=run;root.className='v term';root.style='';root.innerHTM
   await line('');
   await line('  что:    кино',250);await line('  когда:  в эти выходные',250);await line('  фильм:  выбираешь ты',250);await line('  попкорн: true',250);
   await line('');await line('<span class="g">?</span> пойдём? <span class="d">[Y/n]</span>',500);
-  const tb=el('div','tb');const n=el('button','n','n<small>не в этот раз</small>');
+  const tb=el('div','tb');const n=el('button','n','No');
   n.onclick=async()=>{tb.remove();ping();await line('<span class="d">&gt; n</span>',100);await line('exit code 0. ошибок нет, обид тоже.');await line('писать ничего не нужно.');await line('шоколадка в любом случае твоя :)');
     const b=el('button','back','Передумала? Вернуться');b.onclick=()=>show('term');root.append(b)};
-  tb.append(yes('y','Y<small>написать в Telegram</small>'),n);root.append(tb)},
+  tb.append(yes('y','Yes'),n);root.append(tb)},
 
 cap(root){root.className='v cap';root.style='';
   const tiles=[['🍿','#fde7e7'],['🎟️','#e6f0ff'],['🎬','#fff3d6'],['📽️','#e8f7ec'],['🍫','#f3e6dc'],['🥤','#eef'],['🕶️','#f1e9ff'],['🎞️','#ffe9d6'],['💺','#e9eef5']];
