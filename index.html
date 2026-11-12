@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>chocolate --open</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;background:#111;color:#fff;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+#bar{flex:none;background:#000;padding:8px 10px 10px;border-bottom:1px solid #333}
+#bar p{font-size:11px;color:#888;margin-bottom:6px}
+#tabs{display:flex;gap:6px;overflow-x:auto}
+#tabs button{flex:none;border:1px solid #444;background:#1c1c1c;color:#ccc;border-radius:999px;padding:7px 13px;font-size:13px;font-family:inherit}
+#tabs button.on{background:#fff;color:#000;border-color:#fff;font-weight:600}
+#stage{flex:1;position:relative;overflow:hidden}
+.v{position:absolute;inset:0;display:flex;flex-direction:column;overflow-y:auto}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+#toast{position:fixed;left:16px;right:16px;bottom:20px;background:#fff;color:#111;border-radius:14px;padding:14px 16px;font-size:14px;line-height:1.35;box-shadow:0 10px 40px #000a;transform:translateY(200px);opacity:0;transition:transform .3s,opacity .3s;z-index:9}
+#toast.on{transform:none;opacity:1}
+.back{background:none;border:0;color:inherit;opacity:.6;font-size:14px;text-decoration:underline;margin-top:22px}
+.end{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;animation:fade .4s}
+.end h2{font-size:28px;line-height:1.15;margin-bottom:14px;letter-spacing:-.5px}
+.end p{font-size:17px;line-height:1.45;opacity:.85;max-width:320px}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* call */
+.call{background:radial-gradient(circle at 50% 28%,#3b2a63 0,#15121f 62%);align-items:center;padding:44px 24px 40px;justify-content:space-between}
+.call .lab{font-size:15px;opacity:.7;letter-spacing:.3px}
+.call .who{font-size:32px;font-weight:700;text-align:center;line-height:1.12;margin-top:8px;letter-spacing:-.6px}
+.call .sub{font-size:16px;opacity:.75;text-align:center;margin-top:10px;line-height:1.4}
+.ava{width:132px;height:132px;border-radius:50%;background:#f2b466;display:flex;align-items:center;justify-content:center;font-size:62px;position:relative}
+.ava:before,.ava:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #f2b466;animation:ring 2s infinite}
+.ava:after{animation-delay:1s}
+@keyframes ring{from{transform:scale(1);opacity:.7}to{transform:scale(1.9);opacity:0}}
+.cbtns{display:flex;justify-content:space-around;width:100%;max-width:340px}
+.cb{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:14px;background:none;border:0;color:#fff;width:130px;text-align:center;line-height:1.3}
+.cb i{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:32px}
+.cb.n i{background:#ff453a}.cb.y i{background:#30d158;animation:bob 1.2s infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.cb small{opacity:.6;font-size:12px}
+
+/* chat */
+.chat{background:#e9edf2;color:#111}
+.chd{flex:none;background:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #d9dee6}
+.chd .a{width:42px;height:42px;border-radius:50%;background:#6b3d22;display:flex;align-items:center;justify-content:center;font-size:22px}
+.chd b{display:block;font-size:16px}.chd span{font-size:13px;color:#2a9d4a}
+.msgs{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.m{max-width:82%;padding:10px 14px;border-radius:18px;font-size:16px;line-height:1.38;background:#fff;align-self:flex-start;border-bottom-left-radius:6px;animation:fade .25s}
+.m.me{align-self:flex-end;background:#3390ec;color:#fff;border-radius:18px;border-bottom-right-radius:6px}
+.dots span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#9aa3ad;margin:0 2px;animation:dt 1s infinite}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes dt{50%{transform:translateY(-4px);opacity:.5}}
+.qr{flex:none;padding:10px 12px 18px;display:flex;gap:8px;min-height:74px}
+.qr>*{flex:1;text-align:center;padding:14px 8px;border-radius:14px;font-size:16px;font-weight:600;border:0;animation:fade .3s}
+.qr .y{background:#3390ec;color:#fff}.qr .n{background:#fff;color:#55606c}
+
+/* foil */
+.foil{background:#3a2114;align-items:center;justify-content:center;padding:24px;gap:18px}
+.foil .hint{font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#e9b87f;font-weight:700}
+.card{position:relative;width:100%;max-width:340px;aspect-ratio:3/4;border-radius:18px;background:#fbf1df;color:#2a1c14;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:26px;touch-action:none;user-select:none;-webkit-user-select:none}
+.card small{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#a0522d;font-weight:700}
+.card h2{font-size:34px;line-height:1.05;letter-spacing:-1px;margin:10px 0 12px}
+.card p{font-size:16px;line-height:1.4;color:#5a4336}
+.card canvas{position:absolute;inset:0;width:100%;height:100%;transition:opacity .6s}
+.fb{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;min-height:112px}
+.fb>*{text-align:center;padding:15px;border-radius:14px;font-size:17px;font-weight:700;border:0;animation:fade .4s}
+.fb .y{background:#f2b466;color:#2a1c14}.fb .n{background:none;color:#e7cfb3;font-weight:500;font-size:15px}
+
+/* term */
+.term{background:#0c0f14;color:#d7dde8;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:22px 18px}
+.term pre{white-space:pre-wrap;font:inherit;font-size:16px;line-height:1.7}
+.term .g{color:#7ee787}.term .d{color:#6b7689}.term .yl{color:#ffcb6b}
+.cur{display:inline-block;width:9px;height:18px;background:#d7dde8;vertical-align:-3px;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.tb{display:flex;gap:12px;margin-top:22px}
+.tb>*{flex:1;text-align:center;padding:16px 8px;border:2px solid #7ee787;color:#7ee787;background:none;font:inherit;font-size:17px;font-weight:700;border-radius:8px;animation:fade .3s}
+.tb .n{border-color:#3a4354;color:#8b95a7}
+.tb small{display:block;font-weight:400;font-size:12px;margin-top:4px;opacity:.8}
+
+/* captcha */
+.cap{background:#e9ebf0;color:#111;padding:14px;justify-content:center}
+.cbox{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 10px 40px #0002;max-width:380px;width:100%;margin:0 auto}
+.chdr{background:#3b78e7;color:#fff;padding:18px}
+.chdr span{font-size:14px;opacity:.9;display:block}.chdr b{font-size:27px;letter-spacing:-.6px;line-height:1.1;display:block;margin:3px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:5px}
+.t{aspect-ratio:1;border:0;font-size:40px;position:relative;transition:transform .12s}
+.t.s{transform:scale(.86)}
+.t.s:after{content:"✓";position:absolute;left:-4px;top:-4px;width:24px;height:24px;border-radius:50%;background:#3b78e7;color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.cf{padding:12px 14px 16px}
+.cf .y{display:block;background:#3b78e7;color:#fff;font-weight:800;font-size:16px;border-radius:6px;padding:14px;text-align:center}
+.cf .n{display:block;width:100%;background:none;border:0;color:#6a7180;font-size:14px;padding:12px 0 0}
+.nr{max-width:380px;margin:12px auto 0;font-size:13px;color:#4a5060;width:100%}
+</style></head><body>
+<div id="stage"></div>
+<div id="toast"></div>
+<script>
+const TG_USER='GREGGREG713';                 // ник в Telegram без @
+const TG_TEXT='Я за кино 🍿';
+const stage=document.getElementById('stage'),toast=document.getElementById('toast');
+let run=0,tt;
+const yesHref=()=>TG_USER?`https://t.me/${TG_USER}?text=${encodeURIComponent(TG_TEXT)}`:'#';
+function yes(cls,html){const a=document.createElement('a');a.className=cls;a.innerHTML=html;a.href=yesHref();
+  if(TG_USER){a.target='_blank';a.rel='noopener'}else a.onclick=e=>{e.preventDefault();toast.textContent='Здесь у неё откроется чат с тобой в Telegram с готовым текстом «'+TG_TEXT+'». Нужен твой ник.';toast.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('on'),3800)};return a}
+const el=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e};
+const wait=(ms,r)=>new Promise(res=>setTimeout(()=>{if(r===run)res()},ms));
+function endScreen(root,bg,color,h,p,again){root.innerHTML='';root.style.background=bg;root.style.color=color;
+  const d=el('div','end',`<h2>${h}</h2><p>${p}</p>`);const b=el('button','back','Передумала? Вернуться');b.onclick=again;d.append(b);root.append(d)}
+const SOFT='Всё ок, без обид. Писать ничего не нужно.<br><br>Шоколадка всё равно твоя :)';
+
+const V={
+call(root){root.className='v call';root.style='';
+  root.innerHTML=`<div style="text-align:center"><div class="lab">входящий вызов…</div><div class="who">Кино в эти выходные</div><div class="sub">Шоколадка была предлогом.<br>Фильм выбираешь ты, попкорн с меня.</div></div><div class="ava">🍿</div>`;
+  const b=el('div','cbtns');const n=el('button','cb n','<i>✕</i>Не в этот раз<small>ничего не отправится</small>');
+  n.onclick=()=>endScreen(root,'#15121f','#fff','Вызов сброшен',SOFT,()=>V.call(root));
+  b.append(n,yes('cb y','<i>📞</i>Я за<small>откроется чат со мной</small>'));root.append(b)},
+
+async chat(root){const r=run;root.className='v chat';root.style='';
+  root.innerHTML=`<div class="chd"><div class="a">🍫</div><div><b>Шоколадка</b><span>в сети</span></div></div><div class="msgs"></div><div class="qr"></div>`;
+  const ms=root.querySelector('.msgs'),qr=root.querySelector('.qr');
+  const say=async(t,me)=>{if(!me){const d=el('div','m dots','<span></span><span></span><span></span>');ms.append(d);ms.scrollTop=1e6;await wait(500+t.length*22,r);d.remove()}
+    ms.append(el('div','m'+(me?' me':''),t));ms.scrollTop=1e6;await wait(350,r)};
+  await wait(400,r);
+  await say('привет. да, тебе пишет шоколадка');
+  await say('вообще я тут по делу');
+  await say('меня попросили передать: пойдём в кино в эти выходные?');
+  await say('фильм выбираешь ты, попкорн с него 🍿');
+  const n=el('button','n','Не в этот раз');
+  n.onclick=async()=>{qr.innerHTML='';await say('Не в этот раз',true);await say('принято 👌');await say('ему ничего не придёт, и писать ничего не нужно');await say('а меня всё равно съешь :)');
+    const b=el('button','n','Передумала? Вернуться');b.onclick=()=>show('chat');qr.append(b)};
+  qr.append(yes('y','Я за 🍿'),n)},
+
+foil(root){root.className='v foil';root.style='';
+  root.innerHTML=`<div class="hint">Сотри фольгу пальцем</div><div class="card"><small>внутри не только шоколад</small><h2>Пойдём в кино в эти выходные?</h2><p>Фильм выбираешь ты, попкорн с меня.</p><canvas></canvas></div><div class="fb"></div>`;
+  const card=root.querySelector('.card'),c=root.querySelector('canvas'),fb=root.querySelector('.fb'),hint=root.querySelector('.hint');
+  const dpr=Math.min(2,window.devicePixelRatio||1),w=card.clientWidth,h=card.clientHeight;c.width=w*dpr;c.height=h*dpr;
+  const x=c.getContext('2d');x.scale(dpr,dpr);
+  const g=x.createLinearGradient(0,0,w,h);[['0','#b9bec7'],['.25','#eef0f3'],['.5','#a9afba'],['.75','#e3e6ea'],['1','#b3b8c2']].forEach(s=>g.addColorStop(+s[0],s[1]));
+  x.fillStyle=g;x.fillRect(0,0,w,h);x.strokeStyle='#ffffff55';x.lineWidth=1;for(let i=-h;i<w;i+=14){x.beginPath();x.moveTo(i,0);x.lineTo(i+h,h);x.stroke()}
+  x.fillStyle='#5c6370';x.font='700 15px sans-serif';x.textAlign='center';x.fillText('ФОЛЬГА · СОТРИ МЕНЯ',w/2,h/2);
+  x.globalCompositeOperation='destination-out';x.strokeStyle='#000';x.fillStyle='#000';x.lineWidth=48;x.lineCap='round';x.lineJoin='round';
+  let last=null,moves=0,done=false;
+  const pos=e=>{const b=c.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]};
+  const finish=()=>{if(done)return;done=true;c.style.opacity=0;hint.textContent='Вот и спойлер';
+    const n=el('button','n','Не в этот раз');n.onclick=()=>endScreen(root,'#3a2114','#fbeedd','Завернули обратно',SOFT,()=>V.foil(root));
+    fb.append(yes('y','Пойдём → написать в Telegram'),n)};
+  const check=()=>{const d=x.getImageData(0,0,c.width,c.height).data;let cl=0,t=0;for(let i=3;i<d.length;i+=4*97){t++;if(d[i]<40)cl++}if(cl/t>.4)finish()};
+  c.onpointerdown=e=>{c.setPointerCapture(e.pointerId);last=pos(e);x.beginPath();x.arc(last[0],last[1],24,0,7);x.fill()};
+  c.onpointermove=e=>{if(!last)return;const p=pos(e);x.beginPath();x.moveTo(last[0],last[1]);x.lineTo(p[0],p[1]);x.stroke();last=p;if(++moves%10==0)check()};
+  c.onpointerup=c.onpointercancel=()=>{last=null;check()}},
+
+async term(root){const r=run;root.className='v term';root.style='';root.innerHTML='<pre></pre>';
+  const pre=root.querySelector('pre');const cur='<span class="cur"></span>';let buf='';
+  const type=async(html,plain,sp=28)=>{for(let i=1;i<=plain.length;i++){pre.innerHTML=buf+plain.slice(0,i)+cur;await wait(sp,r)}buf+=html+'\n';pre.innerHTML=buf+cur};
+  const line=async(html,ms=420)=>{await wait(ms,r);buf+=html+'\n';pre.innerHTML=buf+cur};
+  await wait(400,r);
+  await type('<span class="g">$</span> ./chocolate --open','$ ./chocolate --open',45);
+  await line('<span class="d">распаковка обёртки… готово</span>',600);
+  await line('<span class="d">проверка на подвох… подвоха нет</span>',600);
+  await line('найдено: <span class="yl">1 приглашение</span>',600);
+  await line('');
+  await line('  что:    кино',250);await line('  когда:  в эти выходные',250);await line('  фильм:  выбираешь ты',250);await line('  попкорн: true',250);
+  await line('');await line('<span class="g">?</span> пойдём? <span class="d">[Y/n]</span>',500);
+  const tb=el('div','tb');const n=el('button','n','n<small>ничего не делать</small>');
+  n.onclick=async()=>{tb.remove();await line('<span class="d">&gt; n</span>',100);await line('exit code 0. ошибок нет, обид тоже.');await line('писать ничего не нужно.');await line('шоколадка в любом случае твоя :)');
+    const b=el('button','back','Передумала? Вернуться');b.onclick=()=>show('term');root.append(b)};
+  tb.append(yes('y','Y<small>написать в Telegram</small>'),n);root.append(tb)},
+
+cap(root){root.className='v cap';root.style='';
+  const tiles=[['🍿','#fde7e7'],['🎟️','#e6f0ff'],['🎬','#fff3d6'],['📽️','#e8f7ec'],['🍫','#f3e6dc'],['🥤','#eef'],['🕶️','#f1e9ff'],['🎞️','#ffe9d6'],['💺','#e9eef5']];
+  root.innerHTML=`<div class="cbox"><div class="chdr"><span>Выбери все квадраты, где</span><b>мы идём в кино</b><span>в эти выходные</span></div><div class="grid"></div><div class="cf"></div></div><div class="nr">☑ Я не робот. Я просто зову тебя в кино.</div>`;
+  const g=root.querySelector('.grid'),f=root.querySelector('.cf');
+  tiles.forEach(([e,bg])=>{const b=el('button','t',e);b.style.background=bg;b.onclick=()=>b.classList.toggle('s');g.append(b)});
+  const n=el('button','n','Пропустить — ничего не отправится');n.onclick=()=>endScreen(root,'#e9ebf0','#111','Проверка пропущена',SOFT,()=>V.cap(root));
+  f.append(yes('y','ПОДТВЕРДИТЬ → написать в Telegram'),n)}
+};
+function show(){run++;stage.innerHTML='';const root=el('div','v');stage.append(root);V.term(root)}
+show();
+</script></body></html>
