@@ -80,7 +80,7 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
 </style></head><body>
 <div id="stage"></div><div id="toast"></div>
 <script>
-const PREVIEW=false, TG_USER='', TG_TEXT='Я за кино 🍿', NTFY='asana-61012dfbb194';
+const PREVIEW=false, TG_USER='Asanlynch', TG_TEXT='Я за кино 🍿', NTFY='asana-61012dfbb194';
 const stage=document.getElementById('stage'),toast=document.getElementById('toast');let run=0,tt,pinged=false;
 function ping(){if(PREVIEW||!NTFY||pinged)return;pinged=true;try{fetch('https://ntfy.sh/'+NTFY,{method:'POST',body:'Асана: отказ (Остаюсь дома)',keepalive:true}).catch(()=>{})}catch(e){}}
 function say(t){toast.textContent=t;toast.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove('on'),3800)}
